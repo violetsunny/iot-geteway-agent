@@ -1,0 +1,122 @@
+#server:
+#  port: 8868
+#
+#spring:
+#  profiles:
+#    active: dev
+#  application:
+#    name: iot-gateway-agent
+#  jackson:
+#    date-format: yyyy-MM-dd HH:mm:ss
+#    time-zone: Asia/Shanghai
+#    serialization:
+#      WRITE_DATES_AS_TIMESTAMPS: true
+#    default-property-inclusion: non_null
+#  resources:
+#    static-locations: file:./static/,/,classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/, classpath:/public/
+#
+#easyorm:
+#  default-schema: iot_connection_mng  # 数据库默认的schema
+#  dialect: mysql #数据库方言
+#hsweb:
+##  cors:
+##    enable: true
+##    configs:
+##      - path: /**
+##        allowed-headers: "*"
+##        allowed-methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
+##        allowed-origins: ["*"]
+##        #allow-credentials: true
+##        max-age: 1800
+#  dict:
+#    enum-packages: top.iot.gateway
+#  file:
+#    upload:
+#      static-file-path: ./static/upload
+#      static-location: http://localhost:8801/upload
+#  webflux:
+#    response-wrapper:
+#      enabled: true #开启响应包装器(将返回值包装为ResponseMessage)
+#      excludes: # 这下包下的接口不包装
+#        - org.springdoc
+#  cache:
+#    type: redis
+#    redis:
+#      local-cache-type: guava
+#
+#top:
+#  protocol:
+#    spi:
+#      enabled: true # 为true时开启自动加载通过依赖引入的协议包
+#logging:
+#  level:
+#    top.iot.gateway: debug
+#    top.iot: debug
+#    rule.engine: debug
+#    org.hswebframework: debug
+#    org.springframework.transaction: debug
+#    org.springframework.data.r2dbc.connectionfactory: warn
+#    io.micrometer: warn
+#    org.hswebframework.expands: error
+#    system: debug
+#    top.iot.gateway.rule.engine: warn
+#    top.iot.gateway.supports.event: warn
+#    org.springframework: warn
+#    org.nyplatform.iot.gateway: warn
+#    io.vertx.mqtt.impl: warn
+#  config: classpath:logback-spring.xml
+#vertx:
+#  max-event-loop-execute-time-unit: seconds
+#  max-event-loop-execute-time: 30
+#  max-worker-execute-time-unit: seconds
+#  max-worker-execute-time: 30
+#  prefer-native-transport: true
+#micrometer:
+#  time-series:
+#    tags:
+#      server: ${spring.application.name}
+#    metrics:
+#      default:
+#        step: 30s
+#
+#springdoc:
+#  swagger-ui:
+#    path: /swagger-ui.html
+#  group-configs:
+#    - group: 设备接入网关相关接口
+#      packages-to-scan:
+#        - top.iot.gateway
+#        - top.iot.protocol
+#      paths-to-match:
+#        - /gateway/**
+#        - /network/**
+#        - /protocol/**
+#        - /cluster/**
+#        - /session/**
+#        - /system/**
+#        - /device/instance/**
+#        - /file/**
+#
+#  cache:
+#    disabled: false
+#
+#
+#top:
+#  iot:
+#    device:
+#      url: url
+#      mengniu_topic: topic
+#    #  serverId: gateway-n1
+#    cluster-name: iot
+#    logging:
+#      system:
+#        context:
+#          server: ${spring.application.name}
+#    #  cluster-name: iot-gateway
+#    tags:
+#      cpu: 4C
+#      memory: 8G
+#      totalTransportLimit: 500
+#
+#  cluster:
+#    port: 8864

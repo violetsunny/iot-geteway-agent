@@ -1,0 +1,215 @@
+spring:
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: Asia/Shanghai
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: true
+    default-property-inclusion: non_null
+  redis:
+    host: 10.39.68.63
+    port: 6379
+    password: MjQxNTkzNj
+    lettuce:
+      pool:
+        max-active: 1024
+    timeout: 20s
+    connect-timeout: 20s
+    serializer: fst
+
+  r2dbc:
+    url: r2dbc:mysql://10.39.68.62:3306/iot_connection_mng?sslMode=disabled
+    username: adm_airecon
+    password: adm2o3rhU$2i
+    pool:
+      max-size: 10
+      initial-size: 10
+      max-idle-time: 60m
+      validation-query: select 1
+#  data:
+#    elasticsearch:
+#      client:
+#        reactive:
+#          endpoints: ${elasticsearch.client.host}:${elasticsearch.client.port}
+#          max-in-memory-size: 100MB
+#          socket-timeout: ${elasticsearch.client.socket-timeout}
+#          connection-timeout: ${elasticsearch.client.socket-timeout}
+
+  reactor:
+    debug-agent:
+      enabled: false
+  kafka:
+    bootstrap-servers: 10.39.68.59:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer #配置序列化器
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      batch-size: 1024 #每次发送的消息数量
+      buffer-memory: 33554432
+      #procedure要求leader在考虑完成请求之前收到的确认数，用于控制发送记录在服务端的持久化，其值可以为如下：
+      #acks = 0 如果设置为零，则生产者将不会等待来自服务器的任何确认，该记录将立即添加到套接字缓冲区并视为已发送。在这种情况下，无法保证服务器已收到记录，并且重试配置将不会生效（因为客户端通常不会知道任何故障），为每条记录返回的偏移量始终设置为-1。
+      #acks = 1 这意味着leader会将记录写入其本地日志，但无需等待所有副本服务器的完全确认即可做出回应，在这种情况下，如果leader在确认记录后立即失败，但在将数据复制到所有的副本服务器之前，则记录将会丢失。
+      #acks = all 这意味着leader将等待完整的同步副本集以确认记录，这保证了只要至少一个同步副本服务器仍然存活，记录就不会丢失，这是最强有力的保证，这相当于acks = -1的设置。
+      #可以设置的值为：all, -1, 0, 1
+      acks: 1
+    consumer:
+      group-id: iot-gateway-agent #group-id
+      auto-offset-reset: latest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer #配置反序列化器
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      enable-auto-commit: true
+      auto-commit-interval: 100
+
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 10.39.68.135:8804
+        namespace: enn-test-public
+
+  elasticsearch:
+    uris:
+      - http://${elasticsearch.client.host}:${elasticsearch.client.port}
+    connection-timeout: 5
+    socket-timeout: 3
+  web:
+    resources:
+      static-locations: file:./static/,/,classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/, classpath:/public/
+
+elasticsearch:
+  client:
+    host: 10.39.64.22
+    port: 9200
+
+emqx:
+  host: 10.39.68.56
+  port: 1883
+  password: 123456
+  username: admin
+  TLS: false
+
+minio:
+  resourcesUrl: http://10.39.68.191:9002
+  resourcesOutUrl: https://newiot.fat.ennew.com/minio
+  accessKeyId: minioadmin
+  accessKeySecret: minioadmin
+  bucket: protocol-test
+  # 旧版minio配置信息
+  # endpoint: http://www.ennewiot.com:9000
+  # accessKey: minioadmin
+  # secretKey: minioadmin
+  # bucketName: protocol-test
+
+easyorm:
+  default-schema: iot_connection_mng  # 数据库默认的schema
+  dialect: mysql #数据库方言
+hsweb:
+  dict:
+    enum-packages: top.iot.gateway
+  file:
+    upload:
+      static-file-path: ./static/upload
+      static-location: http://localhost:8801/upload
+  webflux:
+    response-wrapper:
+      enabled: true #开启响应包装器(将返回值包装为ResponseMessage)
+      excludes: # 这下包下的接口不包装
+        - org.springdoc
+  cache:
+    type: redis
+    redis:
+      local-cache-type: guava
+
+logging:
+  level:
+    top.iot.gateway: debug
+    top.iot: debug
+    rule.engine: debug
+    org.hswebframework: debug
+    org.springframework.transaction: debug
+    org.springframework.data.r2dbc.connectionfactory: warn
+    io.micrometer: warn
+    org.hswebframework.expands: error
+    system: debug
+    top.iot.gateway.rule.engine: warn
+    top.iot.gateway.supports.event: warn
+    org.springframework: warn
+    org.nyplatform.iot.gateway: warn
+    io.vertx.mqtt.impl: warn
+  config: classpath:logback-spring.xml
+vertx:
+  max-event-loop-execute-time-unit: seconds
+  max-event-loop-execute-time: 30
+  max-worker-execute-time-unit: seconds
+  max-worker-execute-time: 30
+  prefer-native-transport: true
+micrometer:
+  time-series:
+    tags:
+      server: ${spring.application.name}
+    metrics:
+      default:
+        step: 30s
+
+springdoc:
+  api-docs:
+    # 是否开启API文档，true表示开启，false表示关闭
+    enabled: true
+    groups:
+      # 是否开启分组，true表示开启
+      enabled: true
+    # API元数据访问路径，默认为/v3/api-docs
+    path: /v3/api-docs
+  swagger-ui:
+    # swagger-ui文档访问路径，默认为/swagger-ui.html
+    path: /swagger-ui.html
+    # 分组配置
+  group-configs:
+    - group: 设备接入网关相关接口
+      # 按包路径匹配
+      packages-to-scan:
+        - top.iot.gateway
+      # 按路径匹配
+      paths-to-match:
+        - /gateway/**
+        - /network/**
+        - /cluster/**
+        - /session/**
+        - /system/**
+        - /device/instance/**
+        - /file/**
+        - /emqx/**
+    - group: 设备接入协议相关接口
+      # 按包路径匹配
+      packages-to-scan:
+        - top.iot.protocol
+      # 按路径匹配
+      paths-to-match:
+        - /protocol/**
+
+  cache:
+    disabled: false
+
+top:
+  iot:
+    protocol:
+      spi:
+        enabled: true # 为true时开启自动加载通过依赖引入的协议包
+    device:
+      url: http://10.39.64.22:8802
+      mengniu_topic: enn_data_iot_metric
+
+    product-api:
+      query-by-id-url: /product/get/entityTypeInfo/
+      measure-properties-jsonpath: $.data.deviceProperties.measureProperties
+
+    cluster-name: iot
+    logging:
+      system:
+        context:
+          server: ${spring.application.name}
+    #  cluster-name: iot-gateway
+    tags:
+      cpu: 4C
+      memory: 8G
+      totalTransportLimit: 500
+
+  cluster:
+    port: 8864

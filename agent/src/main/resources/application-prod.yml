@@ -1,0 +1,114 @@
+#spring:
+#  redis:
+#    cluster:
+#      nodes:
+#        - 10.39.68.130:6300
+#        - 10.39.68.130:6301
+#        - 10.39.68.131:6300
+#        - 10.39.68.131:6301
+#        - 10.39.68.132:6300
+#        - 10.39.68.132:6301
+#      max-redirects: 3
+#    password: SAkikgULNWgX
+#    lettuce:
+#      pool:
+#        max-active: 1024
+#    timeout: 20s
+#    serializer: fst # 设置fst时,redis key使用string序列化,value使用 fst序列化.
+##    sentinel:
+##      nodes: 10.39.201.5:26379,10.39.201.6:26379
+##      master: mymaster
+#
+#  #    database: 3
+#  #        max-wait: 10s
+#  r2dbc:
+#    url: r2dbc:mysql://10.39.68.134:3306/iot_connection_mng
+#    username: adm_airecon
+#    password: zef%r061z$mO
+#    pool:
+#      max-size: 10
+#      initial-size: 10
+#      max-idle-time: 60m
+#      validation-query: select 1
+#  data:
+#    elasticsearch:
+#      client:
+#        reactive:
+#          endpoints: ${elasticsearch.client.host}:${elasticsearch.client.port}
+#          max-in-memory-size: 100MB
+#          socket-timeout: ${elasticsearch.client.socket-timeout}
+#          connection-timeout: ${elasticsearch.client.socket-timeout}
+#
+#  reactor:
+#    debug-agent:
+#      enabled: false
+#  kafka:
+#    bootstrap-servers:
+#      - 10.39.68.191:9092
+#      - 10.39.68.192:9092
+#    producer:
+#      key-serializer: org.apache.kafka.common.serialization.StringSerializer #配置序列化器
+#      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+#      batch-size: 1024 #每次发送的消息数量
+#      buffer-memory: 33554432
+#      #procedure要求leader在考虑完成请求之前收到的确认数，用于控制发送记录在服务端的持久化，其值可以为如下：
+#      #acks = 0 如果设置为零，则生产者将不会等待来自服务器的任何确认，该记录将立即添加到套接字缓冲区并视为已发送。在这种情况下，无法保证服务器已收到记录，并且重试配置将不会生效（因为客户端通常不会知道任何故障），为每条记录返回的偏移量始终设置为-1。
+#      #acks = 1 这意味着leader会将记录写入其本地日志，但无需等待所有副本服务器的完全确认即可做出回应，在这种情况下，如果leader在确认记录后立即失败，但在将数据复制到所有的副本服务器之前，则记录将会丢失。
+#      #acks = all 这意味着leader将等待完整的同步副本集以确认记录，这保证了只要至少一个同步副本服务器仍然存活，记录就不会丢失，这是最强有力的保证，这相当于acks = -1的设置。
+#      #可以设置的值为：all, -1, 0, 1
+#      acks: 1
+#    consumer:
+#      group-id: iot-gateway-agent #group-id
+#      auto-offset-reset: latest
+#      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer #配置反序列化器
+#      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+#      enable-auto-commit: true
+#      auto-commit-interval: 100
+#
+#  cloud:
+#    nacos:
+#      discovery:
+#        server-addr: 10.39.68.135:8804
+#        namespace: enn-prod-public
+#
+#elasticsearch:
+#  embedded:
+#    enabled: false # 为true时使用内嵌的elasticsearch,不建议在生产环境中使用
+#  client:
+#    host: 10.39.68.95
+#    port: 9200
+#    max-conn-total: 128
+#    connect-timeout: 5000
+#    socket-timeout: 5000
+#    connection-request-timeout: 8000
+#  index:
+#    default-strategy: direct #默认es的索引按月进行分表, direct则为直接操作索引.
+#    settings:
+#      number-of-shards: 1 # es 分片数量
+#      number-of-replicas: 0 # 副本数量
+##easyorm:
+##  default-schema: godsoniot  # 数据库默认的schema
+##  dialect: mysql #数据库方言
+#
+#
+#minio:
+#  # minio配置的地址，端口9000
+#  endpoint: http://www.ennewiot.com:9000
+#  # 账号
+#  accessKey: minioadmin
+#  # 密码
+#  secretKey: minioadmin
+#  # MinIO桶名字 需要在网页版本里修改bucket权限 readandwrite
+#  bucketName: protocol-prod
+#
+#top:
+#  iot:
+#    device:
+#     url: http://10.39.68.181:9999/api
+#     mengniu_topic: data_iot_mengniu
+#
+#    product-api:
+#     query-by-id-url: /product/get/entityTypeInfo/
+#     query-by-code-url: /product/get/entityTypeInfo/byCode/
+#     measure-properties-jsonpath: $.data.deviceProperties.measureProperties
+#

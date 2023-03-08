@@ -1,0 +1,23 @@
+server:
+  port: 8868
+
+spring:
+  profiles:
+    active: test
+  application:
+    name: ${APP_ID:iot-gateway-agent}
+  cloud:
+    nacos:
+      config:
+        server-addr: ${NACOS_ADDR:10.39.68.135:8804}
+        namespace: enn-${spring.profiles.active}-public
+        file-extension: yaml
+
+skywalking:
+  agent:
+    service_name: iot-gateway-agent
+
+
+
+
+
